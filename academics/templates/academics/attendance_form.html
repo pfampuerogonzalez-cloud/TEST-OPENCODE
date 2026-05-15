@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Registrar Asistencia{% endblock %}
+{% block content %}
+<div class="card shadow-sm">
+    <div class="card-header bg-white fw-bold">Registrar Asistencia</div>
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            <div class="row g-3">
+                <div class="col-md-6"><label class="form-label">Alumno</label>{{ form.student }}</div>
+                <div class="col-md-6"><label class="form-label">Curso</label>{{ form.course }}</div>
+                <div class="col-md-4"><label class="form-label">Asignatura</label>{{ form.subject }}</div>
+                <div class="col-md-4"><label class="form-label">Fecha</label>{{ form.fecha }}</div>
+                <div class="col-md-4"><label class="form-label">Estado</label>{{ form.estado }}</div>
+                <div class="col-12"><label class="form-label">Observación</label>{{ form.observacion }}</div>
+            </div>
+            <button type="submit" class="btn btn-primary mt-3">Guardar</button>
+            <a href="{% url 'academics:attendance_list' %}" class="btn btn-secondary mt-3">Cancelar</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

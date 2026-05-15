@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}{% if form.instance.pk %}Editar{% else %}Nuevo{% endif %} Alumno{% endblock %}
+{% block content %}
+<div class="card shadow-sm">
+    <div class="card-header bg-white fw-bold">{% if form.instance.pk %}Editar{% else %}Nuevo{% endif %} Alumno</div>
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            <div class="row g-3">
+                <div class="col-md-4"><label class="form-label">Usuario</label>{{ form.username }}</div>
+                <div class="col-md-4"><label class="form-label">Contraseña</label>{{ form.password }}</div>
+                <div class="col-md-4"><label class="form-label">Email</label>{{ form.email }}</div>
+                <div class="col-md-4"><label class="form-label">Nombre</label>{{ form.first_name }}</div>
+                <div class="col-md-4"><label class="form-label">Apellido</label>{{ form.last_name }}</div>
+                <div class="col-md-4"><label class="form-label">RUT</label>{{ form.rut }}</div>
+                <div class="col-md-4"><label class="form-label">Fecha Nacimiento</label>{{ form.fecha_nacimiento }}</div>
+                <div class="col-md-4"><label class="form-label">Teléfono</label>{{ form.telefono }}</div>
+                <div class="col-md-4"><label class="form-label">Dirección</label>{{ form.direccion }}</div>
+                <div class="col-12"><label class="form-label">Cursos</label>{{ form.courses }}</div>
+            </div>
+            <button type="submit" class="btn btn-primary mt-3">Guardar</button>
+            <a href="{% url 'accounts:student_list' %}" class="btn btn-secondary mt-3">Cancelar</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

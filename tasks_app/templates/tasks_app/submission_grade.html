@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Calificar Entrega{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+        <div class="card shadow-sm mb-3">
+            <div class="card-header bg-white fw-bold">Entrega de {{ submission.student.user.get_full_name }}</div>
+            <div class="card-body">
+                <p><strong>Tarea:</strong> {{ submission.task.titulo }}</p>
+                <p><strong>Entregada:</strong> {{ submission.fecha_entrega|date:"d/m/Y H:i" }}</p>
+                {% if submission.comentario %}<p><strong>Comentario:</strong> {{ submission.comentario }}</p>{% endif %}
+                {% if submission.archivo %}
+                <a href="{{ submission.archivo.url }}" class="btn btn-sm btn-outline-primary" download><i class="bi bi-download"></i> Descargar archivo</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white fw-bold">Calificar</div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3"><label class="form-label">Nota (1.0 - 7.0)</label>{{ form.nota }}</div>
+                    <div class="mb-3"><label class="form-label">Retroalimentación</label>{{ form.feedback }}</div>
+                    <button type="submit" class="btn btn-success">Guardar Calificación</button>
+                    <a href="{% url 'tasks_app:task_detail' submission.task.pk %}" class="btn btn-secondary">Volver</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

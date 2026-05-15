@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}{{ course.nombre }}{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3><i class="bi bi-book"></i> {{ course.nombre }}</h3>
+    <div class="d-flex gap-1">
+        {% if role == 'teacher' or role == 'admin' %}
+        <a href="{% url 'academics:grade_create_for_course' course.pk %}" class="btn btn-success"><i class="bi bi-plus-lg"></i> Subir Nota</a>
+        <a href="{% url 'tasks_app:task_create_for_course' course.pk %}" class="btn btn-warning"><i class="bi bi-plus-lg"></i> Crear Tarea</a>
+        {% endif %}
+        {% if role == 'admin' %}
+        <a href="{% url 'academics:course_edit' course.pk %}" class="btn btn-outline-warning"><i class="bi bi-pencil"></i> Editar</a>
+        <a href="{% url 'academics:course_delete' course.pk %}" class="btn btn-outline-danger"><i class="bi bi-trash3"></i> Eliminar</a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white fw-bold"><i class="bi bi-people"></i> Alumnos ({{ students|length }})</div>
+            <ul class="list-group list-group-flush">
+                {% for s in students %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <a href="{% url 'accounts:student_detail' s.pk %}">{{ s.user.get_full_name }} ({{ s.rut }})</a>
+                    <span class="badge bg-primary rounded-pill">{{ s.grades.count }} notas</span>
+                </li>
+                {% empty %}<li class="list-group-item text-muted">Sin alumnos</li>{% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white fw-bold"><i class="bi bi-bookmark"></i> Asignaturas</div>
+            <ul class="list-group list-group-flush">
+                {% for s in subjects %}
+                <li class="list-group-item">{{ s.nombre }} ({{ s.codigo }})</li>
+                {% empty %}<li class="list-group-item text-muted">Sin asignaturas</li>{% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm mt-3">
+    <div class="card-header bg-white fw-bold"><i class="bi bi-journal-text"></i> Notas del Curso</div>
+    <div class="card-body p-0">
+        <table class="table table-hover mb-0">
+            <thead class="table-light"><tr><th>Alumno</th><th>Asignatura</th><th>Nota</th><th>Tipo</th><th>Fecha</th></tr></thead>
+            <tbody>
+                {% for g in grades %}
+                <tr>
+                    <td>{{ g.student.user.get_full_name }}</td>
+                    <td>{{ g.subject.nombre }}</td>
+                    <td><span class="badge bg-{% if g.valor >= 4 %}success{% else %}danger{% endif %}">{{ g.valor }}</span></td>
+                    <td>{{ g.get_tipo_nota_display }}</td>
+                    <td>{{ g.fecha }}</td>
+                </tr>
+                {% empty %}<tr><td colspan="5" class="text-center text-muted">Sin notas registradas</td></tr>{% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

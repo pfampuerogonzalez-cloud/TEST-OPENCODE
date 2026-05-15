@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Notas{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3><i class="bi bi-journal-text"></i> {% if role == 'student' %}Mis Notas{% else %}Notas{% endif %}</h3>
+    {% if role != 'student' %}
+    <a href="{% url 'academics:grade_create' %}" class="btn btn-success"><i class="bi bi-plus-lg"></i> Subir Nota</a>
+    {% endif %}
+</div>
+<table class="table table-hover shadow-sm">
+    <thead class="table-light">
+        <tr>
+            {% if role != 'student' %}<th>Alumno</th>{% endif %}
+            <th>Asignatura</th><th>Nota</th><th>Tipo</th><th>Fecha</th>
+            {% if role != 'student' %}<th>Acciones</th>{% endif %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for g in grades %}
+        <tr>
+            {% if role != 'student' %}<td>{{ g.student.user.get_full_name }}</td>{% endif %}
+            <td>{{ g.subject.nombre }}</td>
+            <td><span class="badge bg-{% if g.valor >= 4 %}success{% else %}danger{% endif %}">{{ g.valor }}</span></td>
+            <td>{{ g.get_tipo_nota_display }}</td>
+            <td>{{ g.fecha }}</td>
+            {% if role != 'student' %}
+            <td><a href="{% url 'academics:grade_edit' g.pk %}" class="btn btn-sm btn-outline-warning">Editar</a></td>
+            {% endif %}
+        </tr>
+        {% empty %}
+        <tr><td colspan="{% if role == 'student' %}4{% else %}6{% endif %}" class="text-center text-muted">Sin notas registradas</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Nueva Asignatura{% endblock %}
+{% block content %}
+<div class="card shadow-sm">
+    <div class="card-header bg-white fw-bold">Nueva Asignatura</div>
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            <div class="row g-3">
+                <div class="col-md-6"><label class="form-label">Nombre</label>{{ form.nombre }}</div>
+                <div class="col-md-6"><label class="form-label">Código</label>{{ form.codigo }}</div>
+                <div class="col-12"><label class="form-label">Descripción</label>{{ form.descripcion }}</div>
+                <div class="col-md-6"><label class="form-label">Profesores</label>{{ form.profesores }}</div>
+                <div class="col-md-6"><label class="form-label">Cursos</label>{{ form.cursos }}</div>
+            </div>
+            <button type="submit" class="btn btn-primary mt-3">Guardar</button>
+            <a href="{% url 'academics:subject_list' %}" class="btn btn-secondary mt-3">Cancelar</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

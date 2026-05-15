@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}{{ task.titulo }}{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card shadow-sm mb-3">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bi bi-list-task"></i> {{ task.titulo }}</h5>
+                <span class="badge bg-{% if task.fecha_entrega < today %}danger{% else %}primary{% endif %} fs-6">
+                    {% if task.fecha_entrega < today %}Vencida{% endif %} {{ task.fecha_entrega }}
+                </span>
+            </div>
+            <div class="card-body">
+                <p>{{ task.descripcion|linebreaks }}</p>
+                <p class="text-muted small">
+                    <strong>Asignatura:</strong> {{ task.subject.nombre }}<br>
+                    <strong>Curso:</strong> {{ task.course.nombre }}<br>
+                    <strong>Profesor:</strong> {{ task.teacher.user.get_full_name }}<br>
+                    <strong>Creada:</strong> {{ task.fecha_creacion|date:"d/m/Y H:i" }}
+                </p>
+                {% if task.archivo %}
+                <a href="{{ task.archivo.url }}" class="btn btn-sm btn-outline-secondary" download><i class="bi bi-paperclip"></i> Descargar archivo</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if role == 'student' %}
+            {% if submission %}
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white fw-bold"><i class="bi bi-check-circle text-success"></i> Tu Entrega</div>
+                    <div class="card-body">
+                        <p class="text-muted small">Entregada: {{ submission.fecha_entrega|date:"d/m/Y H:i" }}</p>
+                        {% if submission.comentario %}<p>{{ submission.comentario }}</p>{% endif %}
+                        {% if submission.archivo %}<a href="{{ submission.archivo.url }}" class="btn btn-sm btn-outline-primary" download>Ver archivo</a>{% endif %}
+                        {% if submission.nota %}
+                            <hr>
+                            <h5>Calificación: <span class="badge bg-{% if submission.nota >= 4 %}success{% else %}danger{% endif %}">{{ submission.nota }}</span></h5>
+                            {% if submission.feedback %}<p class="small">{{ submission.feedback }}</p>{% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            {% else %}
+                <div class="card shadow-sm">
+                    <div class="card-body text-center">
+                        <p class="text-muted">No has entregado esta tarea aún</p>
+                        <a href="{% url 'tasks_app:submission_create' task.pk %}" class="btn btn-primary"><i class="bi bi-upload"></i> Entregar Tarea</a>
+                    </div>
+                </div>
+            {% endif %}
+        {% elif role == 'teacher' or role == 'admin' %}
+            <div class="card shadow-sm">
+                <div class="card-header bg-white fw-bold"><i class="bi bi-people"></i> Entregas ({{ submissions|length }})</div>
+                <ul class="list-group list-group-flush">
+                    {% for s in submissions %}
+                    <li class="list-group-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <strong>{{ s.student.user.get_full_name }}</strong>
+                            {% if s.nota %}<span class="badge bg-{% if s.nota >= 4 %}success{% else %}danger{% endif %}">{{ s.nota }}</span>
+                            {% else %}<span class="badge bg-warning text-dark">Sin nota</span>{% endif %}
+                        </div>
+                        <small class="text-muted">{{ s.fecha_entrega|date:"d/m/Y H:i" }}</small>
+                        <div class="mt-1">
+                            {% if s.archivo %}<a href="{{ s.archivo.url }}" class="btn btn-sm btn-outline-secondary" download>Archivo</a>{% endif %}
+                            <a href="{% url 'tasks_app:submission_grade' s.pk %}" class="btn btn-sm btn-outline-success">Calificar</a>
+                        </div>
+                    </li>
+                    {% empty %}
+                    <li class="list-group-item text-muted">Sin entregas aún</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

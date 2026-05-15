@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Crear Tarea{% endblock %}
+{% block content %}
+<div class="card shadow-sm">
+    <div class="card-header bg-white fw-bold">Crear Tarea</div>
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row g-3">
+                <div class="col-12"><label class="form-label">Título</label>{{ form.titulo }}</div>
+                <div class="col-12"><label class="form-label">Descripción</label>{{ form.descripcion }}</div>
+                <div class="col-md-4"><label class="form-label">Asignatura</label>{{ form.subject }}</div>
+                <div class="col-md-4"><label class="form-label">Curso</label>{{ form.course }}</div>
+                <div class="col-md-4"><label class="form-label">Fecha de Entrega</label>{{ form.fecha_entrega }}</div>
+                <div class="col-12"><label class="form-label">Archivo (opcional)</label>{{ form.archivo }}</div>
+            </div>
+            <button type="submit" class="btn btn-primary mt-3">Guardar</button>
+            <a href="{% url 'tasks_app:task_list' %}" class="btn btn-secondary mt-3">Cancelar</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

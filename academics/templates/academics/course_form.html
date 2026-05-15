@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Nuevo Curso{% endblock %}
+{% block content %}
+<div class="card shadow-sm">
+    <div class="card-header bg-white fw-bold">Nuevo Curso</div>
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            <div class="row g-3">
+                <div class="col-md-6"><label class="form-label">Nombre</label>{{ form.nombre }}</div>
+                <div class="col-md-6"><label class="form-label">Año</label>{{ form.año }}</div>
+                <div class="col-12"><label class="form-label">Descripción</label>{{ form.descripcion }}</div>
+            </div>
+            <button type="submit" class="btn btn-primary mt-3">Guardar</button>
+            <a href="{% url 'academics:course_list' %}" class="btn btn-secondary mt-3">Cancelar</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

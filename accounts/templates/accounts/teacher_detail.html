@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}{{ teacher.user.get_full_name }}{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-body text-center">
+                <i class="bi bi-person-badge text-success" style="font-size: 4rem;"></i>
+                <h5 class="mt-2">{{ teacher.user.get_full_name }}</h5>
+                <p class="text-muted">{{ teacher.rut }}</p>
+                <p><i class="bi bi-envelope"></i> {{ teacher.user.email|default:"—" }}</p>
+                <p><i class="bi bi-telephone"></i> {{ teacher.telefono|default:"—" }}</p>
+                <p><span class="badge bg-success">{{ teacher.especialidad|default:"Sin especialidad" }}</span></p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card shadow-sm mb-3">
+            <div class="card-header bg-white fw-bold"><i class="bi bi-bookmark"></i> Asignaturas</div>
+            <ul class="list-group list-group-flush">
+                {% for s in teacher.subjects.all %}
+                <li class="list-group-item">{{ s.nombre }}</li>
+                {% empty %}<li class="list-group-item text-muted">Sin asignaturas</li>{% endfor %}
+            </ul>
+        </div>
+        <div class="card shadow-sm">
+            <div class="card-header bg-white fw-bold"><i class="bi bi-list-task"></i> Tareas Creadas</div>
+            <ul class="list-group list-group-flush">
+                {% for t in teacher.tasks.all %}
+                <li class="list-group-item d-flex justify-content-between">
+                    <a href="{% url 'tasks_app:task_detail' t.pk %}">{{ t.titulo }}</a>
+                    <small class="text-muted">{{ t.fecha_entrega }}</small>
+                </li>
+                {% empty %}<li class="list-group-item text-muted">Sin tareas</li>{% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}{{ student.user.get_full_name }}{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-body text-center">
+                <i class="bi bi-person-circle text-primary" style="font-size: 4rem;"></i>
+                <h5 class="mt-2">{{ student.user.get_full_name }}</h5>
+                <p class="text-muted">{{ student.rut }}</p>
+                <p><i class="bi bi-envelope"></i> {{ student.user.email|default:"—" }}</p>
+                <p><i class="bi bi-telephone"></i> {{ student.telefono|default:"—" }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card shadow-sm mb-3">
+            <div class="card-header bg-white fw-bold"><i class="bi bi-book"></i> Cursos</div>
+            <ul class="list-group list-group-flush">
+                {% for c in student.courses.all %}
+                <li class="list-group-item"><a href="{% url 'academics:course_detail' c.pk %}">{{ c.nombre }}</a></li>
+                {% empty %}<li class="list-group-item text-muted">Sin cursos</li>{% endfor %}
+            </ul>
+        </div>
+        <div class="card shadow-sm">
+            <div class="card-header bg-white fw-bold"><i class="bi bi-journal-text"></i> Notas</div>
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light"><tr><th>Asignatura</th><th>Nota</th><th>Tipo</th><th>Fecha</th></tr></thead>
+                    <tbody>
+                        {% for g in student.grades.all %}
+                        <tr>
+                            <td>{{ g.subject.nombre }}</td>
+                            <td><span class="badge bg-{% if g.valor >= 4 %}success{% else %}danger{% endif %}">{{ g.valor }}</span></td>
+                            <td>{{ g.get_tipo_nota_display }}</td>
+                            <td>{{ g.fecha }}</td>
+                        </tr>
+                        {% empty %}<tr><td colspan="4" class="text-center text-muted">Sin notas</td></tr>{% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

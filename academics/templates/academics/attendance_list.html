@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Asistencia{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3><i class="bi bi-calendar-check"></i> {% if role == 'student' %}Mi Asistencia{% else %}Asistencia{% endif %}</h3>
+    {% if role != 'student' %}
+    <a href="{% url 'academics:attendance_create' %}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Registrar Asistencia</a>
+    {% endif %}
+</div>
+<table class="table table-hover shadow-sm">
+    <thead class="table-light">
+        <tr>
+            {% if role != 'student' %}<th>Alumno</th>{% endif %}
+            <th>Curso</th><th>Fecha</th><th>Estado</th><th>Observación</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for a in attendances %}
+        <tr>
+            {% if role != 'student' %}<td>{{ a.student.user.get_full_name }}</td>{% endif %}
+            <td>{{ a.course.nombre }}</td>
+            <td>{{ a.fecha }}</td>
+            <td>
+                <span class="badge bg-{% if a.estado == 'PRESENTE' %}success{% elif a.estado == 'AUSENTE' %}danger{% elif a.estado == 'ATRASO' %}warning{% else %}secondary{% endif %}">
+                    {{ a.get_estado_display }}
+                </span>
+            </td>
+            <td>{{ a.observacion|default:"—" }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="{% if role == 'student' %}3{% else %}5{% endif %}" class="text-center text-muted">Sin registros de asistencia</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

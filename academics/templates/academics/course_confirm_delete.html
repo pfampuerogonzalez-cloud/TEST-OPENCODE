@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Eliminar Curso{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow-sm border-danger">
+            <div class="card-header bg-danger text-white fw-bold"><i class="bi bi-exclamation-triangle"></i> Confirmar Eliminación</div>
+            <div class="card-body text-center">
+                <i class="bi bi-trash3 text-danger" style="font-size: 3rem;"></i>
+                <h5 class="mt-3">¿Estás seguro de eliminar este curso?</h5>
+                <p class="text-muted">Esta acción no se puede deshacer.</p>
+                <div class="border rounded bg-light p-3 mb-3">
+                    <strong>{{ course.nombre }}</strong><br>
+                    <small class="text-muted">Año {{ course.año }}</small>
+                </div>
+                <form method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger"><i class="bi bi-trash3"></i> Eliminar</button>
+                    <a href="{% url 'academics:course_detail' course.pk %}" class="btn btn-secondary">Cancelar</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Tareas{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3><i class="bi bi-list-task"></i> Tareas</h3>
+    {% if role != 'student' %}
+    <a href="{% url 'tasks_app:task_create' %}" class="btn btn-warning"><i class="bi bi-plus-lg"></i> Crear Tarea</a>
+    {% endif %}
+</div>
+<div class="row g-3">
+    {% for t in tasks %}
+    <div class="col-md-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <h5 class="card-title">{{ t.titulo }}</h5>
+                    <span class="badge bg-{% if t.fecha_entrega < today %}danger{% else %}primary{% endif %}">
+                        {% if t.fecha_entrega < today %}Vencida{% else %}{{ t.fecha_entrega }}{% endif %}
+                    </span>
+                </div>
+                <p class="text-muted small mb-2">{{ t.descripcion|truncatechars:120 }}</p>
+                <p class="mb-1"><strong>Curso:</strong> {{ t.course.nombre }}</p>
+                <p class="mb-1"><strong>Asignatura:</strong> {{ t.subject.nombre }}</p>
+                <p class="mb-0"><strong>Profesor:</strong> {{ t.teacher.user.get_full_name }}</p>
+                <a href="{% url 'tasks_app:task_detail' t.pk %}" class="btn btn-sm btn-outline-primary mt-2">Ver Detalle</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col"><p class="text-muted">No hay tareas disponibles</p></div>
+    {% endfor %}
+</div>
+{% endblock %}

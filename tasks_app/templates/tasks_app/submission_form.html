@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Entregar Tarea{% endblock %}
+{% block content %}
+<div class="card shadow-sm">
+    <div class="card-header bg-white fw-bold">Entregar Tarea</div>
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-3"><label class="form-label">Archivo</label>{{ form.archivo }}</div>
+            <div class="mb-3"><label class="form-label">Comentario</label>{{ form.comentario }}</div>
+            <button type="submit" class="btn btn-primary">Entregar</button>
+            <a href="{% url 'tasks_app:task_list' %}" class="btn btn-secondary">Cancelar</a>
+        </form>
+    </div>
+</div>
+{% endblock %}
